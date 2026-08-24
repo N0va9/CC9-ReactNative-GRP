@@ -1,0 +1,21 @@
+export type CatalogItem = {
+    title: string;
+    cpfCode: string;
+    edofTitle: string;
+    duration: string;
+    description: string;
+    formacode: string;
+    slug: string;
+    alias: string;
+    fullAlias: string;
+    path: string;
+    type: string;
+    standardPrice: number;
+    customPrice: number;
+    customPriceExtra: number;
+    remotelyPrice: number;
+    objectives: string;
+    prerequisites: string;
+    trainingOrder: number;
+    certification: object;
+};
