@@ -1,9 +1,11 @@
-import { View, StyleSheet, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import React, { forwardRef, useCallback, useImperativeHandle } from 'react';
+/* eslint-disable react/display-name */
 import { BottomSheetHandle, BottomSheetProps } from '@/components/training/types';
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
+import { Dimensions, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
     (
@@ -11,7 +13,9 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
             activeHeight, 
             children,
             backDropColor= 'rgba(0,0,0,0.5)',
-            backgroundColor = 'white',
+            backgroundColor = 'rgba(255,255,255,0.4)',
+            blurIntensity = 50,
+            blurTint = 'light',
         },
         ref,
     ) => {
@@ -23,6 +27,26 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
 
         const sheetPositionY = useSharedValue(closedPositionY);
         const gestureStartPositionY = useSharedValue(0);
+        const keyboardOffset = useSharedValue(0)
+
+        useEffect(() => {
+            const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+            const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+            const showSub = Keyboard.addListener(showEvent, (e: KeyboardEvent) => {
+                keyboardOffset.value = withTiming(e.endCoordinates.height, { duration: e.duration || 250 });
+            });
+            const hideSub = Keyboard.addListener(hideEvent, (e: KeyboardEvent) => {
+                keyboardOffset.value = withTiming(0, { duration: e.duration || 250 });
+            });
+
+            return () => {
+                showSub.remove();
+                hideSub.remove();
+            };
+            
+        }, [keyboardOffset]);
+
 
         const openSheet = useCallback(() => {
             sheetPositionY.value = withSpring(openPositionY, {
@@ -51,7 +75,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
 
 
         const sheetStyle = useAnimatedStyle(() => ({
-            top: sheetPositionY.value
+            top: sheetPositionY.value - keyboardOffset.value
         }));
 
         const backdropsType = useAnimatedStyle(() => {
@@ -119,6 +143,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
 
                             },
                         ]}>
+                        <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
                         <View style={styles.lineContainer}>
                             <View style={styles.line} />
                         </View>
@@ -136,8 +161,9 @@ const styles = StyleSheet.create({
         position: "absolute",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        bottom: 0,
-        width:'100%'
+        //bottom: 0,
+        width:'100%',
+        overflow: 'hidden'
     },
     lineContainer: {
         marginVertical: 10,

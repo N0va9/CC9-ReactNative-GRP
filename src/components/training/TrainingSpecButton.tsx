@@ -1,14 +1,21 @@
 
-import React, { useRef, useCallback, useState } from 'react';
 import { BottomSheetHandle } from "@/components/training/types";
-import { Dimensions, View, Button, StyleSheet, Text } from "react-native";
+import React, { useCallback, useRef, useState } from 'react';
+import { Button, Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TrainingBottomSheet } from './TrainingBottomSheet';
+import { TrainingForm } from "./form/TrainingForm";
+
 const { height: screenHeight } = Dimensions.get('window');
 
 export function TrainingSpecButton() {
     const bottomSheetRef = useRef<BottomSheetHandle>(null)
     const [content, setContent] = useState<React.ReactNode>(null);
+    const [containerHeight, setContainerHeight] = useState(0);
+
+    const handleLayout = useCallback((event: LayoutChangeEvent) => {
+        setContainerHeight(event.nativeEvent.layout.height);
+    }, []);
 
     const openBottomSheet = useCallback(
         (newContent: React.ReactNode) => {
@@ -21,25 +28,34 @@ export function TrainingSpecButton() {
     );
 
     return (
-        <GestureHandlerRootView style={styles.root}>
-                <View>
+        <GestureHandlerRootView style={styles.root} onLayout={handleLayout}>
+                <View style={styles.container}>
                     <Button
                         title="Show Content"
                         onPress={() =>
                             openBottomSheet(
-                                <View style={styles.content}>
-                                    <Text style={styles.text}>Premier contenu</Text>
-                                </View>
+                                <TrainingForm
+                                    key={Date.now()}
+                                    onSubmit={(data) => {
+                                        console.log('Formulaire envoyé', data);
+                                        bottomSheetRef.current?.closeSheet();
+                                    }}
+                                    onCancel={() => bottomSheetRef.current?.closeSheet()}
+                                />
                             )
                         }
                     />
+
                     <TrainingBottomSheet
                         ref={bottomSheetRef}
                         activeHeight={screenHeight}
+                        containerHeight ={containerHeight}
                         backDropColor="rgba(0,0,0,0.5)"
-                        backgroundColor='red'>
+                        blurIntensity={30}
+                        blurTint="light">
                         {content}
                     </TrainingBottomSheet>
+
                 </View>
         </GestureHandlerRootView>
     )
