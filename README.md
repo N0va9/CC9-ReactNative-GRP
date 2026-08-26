@@ -10,7 +10,12 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Create the .env file
+```bash=
+EXPO_PUBLIC_API_URL={PUT_THE_DAWAN_API_URL}
+```
+
+3. Start the app
 
    ```bash
    npx expo start

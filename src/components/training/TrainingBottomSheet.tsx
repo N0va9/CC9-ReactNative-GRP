@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         bottom: 0,
+        width:'100%'
     },
     lineContainer: {
         marginVertical: 10,
