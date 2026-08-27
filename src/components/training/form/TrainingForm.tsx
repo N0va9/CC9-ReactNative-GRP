@@ -9,7 +9,7 @@ import { StatutList } from './StatutList';
 
 
 
-const LIEUX = ['Paris', 'Lyon', 'Marseille', 'Bordeaux'];
+const LIEUX = ['Bordeaux','Bruxelles','Distance','Genève','Lille','Luxembourg','Lyon','Marseille','Montpellier','Mantes','Nice','Paris','Rennes','Strasbourg','Toulouse'];
 
 interface Props {
     onSubmit: (data: InscriptionFormData) => void;
@@ -127,27 +127,42 @@ export function TrainingForm({ onSubmit, onCancel }: Props) {
                 </View>
 
                 <Text style={styles.legal}>
-                    Les données collectées ne seront transmises à aucun tiers. Elles servent uniquement au suivi de votre demande.
+                    Les données collectées par ce formulaire ne seront transmises à aucun tiers. Elles ne serviront qu'à répondre à votre demande 
+                    et effectuer le suivi de notre relation commerciale.
+                </Text>
+                <Text style={styles.legal}>
+                    Conformément à la loi du 10 janvier 1978 relative à l’Informatique, aux Fichiers et aux Libertés, 
+                    vous pouvez exercer à tout moment, sous réserve de justification de votre identité, 
+                    vos droits (information, accès, opposition, rectification) aux données personnelles vous concernant via notre formulaire de contact.
+                </Text>
+                <Text style={styles.legal}>
+                    Plus de détail sur les mentions légales. 
                 </Text>
 
-            </ScrollView>
-
-            <View style={styles.footer}>
                 <Pressable
                     style={[styles.submitButton, !canSubmit && styles.submitButtonDisabled]}
                     onPress={() => canSubmit && onSubmit(formData)}
                     disabled={!canSubmit}>
                     <Text style={styles.submitText}>Envoyer</Text>
                 </Pressable>
-            </View>
+
+            </ScrollView>
+
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
+    container: { 
+        flex: 1,
+        paddingBottom: 60,
+    },
     scroll: { flex: 1 },
-    scrollContent: { padding: 20, paddingBottom: 110, gap: 22 },
+    scrollContent: { 
+        padding: 20, 
+        paddingBottom: 110, 
+        gap: 22 
+    },
     header: { gap: 6 },
     backButton: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 4 },
     eyebrow: { fontSize: 12, fontWeight: '700', color: '#8e8e93', letterSpacing: 0.5, textTransform: 'uppercase' },
@@ -184,21 +199,6 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
     },
     legal: { fontSize: 11, color: '#a1a1a6', lineHeight: 16 },
-    footer: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: '#fff',
-        paddingHorizontal: 20,
-        paddingTop: 14,
-        paddingBottom: 24,
-        shadowColor: '#000',
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-        shadowOffset: { width: 0, height: -4 },
-        elevation: 6,
-    },
     submitButton: { height: 52, borderRadius: 14, backgroundColor: '#dc2626', alignItems: 'center', justifyContent: 'center' },
     submitButtonDisabled: { opacity: 0.4 },
     submitText: { color: '#fff', fontWeight: '700', fontSize: 16 },
