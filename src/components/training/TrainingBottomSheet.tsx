@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { BottomSheetHandle, BottomSheetProps } from '@/components/training/types';
 import { BlurView } from 'expo-blur';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
@@ -13,7 +12,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
             activeHeight, 
             children,
             backDropColor= 'rgba(0,0,0,0.5)',
-            backgroundColor = 'rgba(255,255,255,0.4)',
+            backgroundColor = 'rgba(255, 242, 223, 0.7)',
             blurIntensity = 50,
             blurTint = 'light',
         },
@@ -24,6 +23,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
         const closedPositionY = screenHeight;
         const openPositionY = screenHeight - activeHeight;
 
+        
 
         const sheetPositionY = useSharedValue(closedPositionY);
         const gestureStartPositionY = useSharedValue(0);
@@ -33,10 +33,10 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
             const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
             const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
-            const showSub = Keyboard.addListener(showEvent, (e: KeyboardEvent) => {
+            const showSub = Keyboard.addListener(showEvent, (e) => {
                 keyboardOffset.value = withTiming(e.endCoordinates.height, { duration: e.duration || 250 });
             });
-            const hideSub = Keyboard.addListener(hideEvent, (e: KeyboardEvent) => {
+            const hideSub = Keyboard.addListener(hideEvent, (e) => {
                 keyboardOffset.value = withTiming(0, { duration: e.duration || 250 });
             });
 

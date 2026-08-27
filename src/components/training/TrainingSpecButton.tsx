@@ -11,11 +11,6 @@ const { height: screenHeight } = Dimensions.get('window');
 export function TrainingSpecButton() {
     const bottomSheetRef = useRef<BottomSheetHandle>(null)
     const [content, setContent] = useState<React.ReactNode>(null);
-    const [containerHeight, setContainerHeight] = useState(0);
-
-    const handleLayout = useCallback((event: LayoutChangeEvent) => {
-        setContainerHeight(event.nativeEvent.layout.height);
-    }, []);
 
     const openBottomSheet = useCallback(
         (newContent: React.ReactNode) => {
@@ -28,7 +23,7 @@ export function TrainingSpecButton() {
     );
 
     return (
-        <GestureHandlerRootView style={styles.root} onLayout={handleLayout}>
+        <GestureHandlerRootView style={styles.root}>
                 <View style={styles.container}>
                     <Button
                         title="Show Content"
@@ -49,9 +44,8 @@ export function TrainingSpecButton() {
                     <TrainingBottomSheet
                         ref={bottomSheetRef}
                         activeHeight={screenHeight}
-                        containerHeight ={containerHeight}
                         backDropColor="rgba(0,0,0,0.5)"
-                        blurIntensity={30}
+                        blurIntensity={100}
                         blurTint="light">
                         {content}
                     </TrainingBottomSheet>
