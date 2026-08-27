@@ -26,16 +26,6 @@ export default function TabLayout() {
           ),
         }}
       />
-
-      <Tabs.Screen
-        name='reload'
-        options={{
-          title: 'Actualiser',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name='reload' size={size} color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }

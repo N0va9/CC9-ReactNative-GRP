@@ -16,7 +16,7 @@ Scanne le QR Code de ton app avec Expo GO
 - Permet de  créer des pages de navigation avec la commande suivante
 
 ```bash=
-npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
+npx expo install expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar expo-blur
 ```
 
 Créez un dossier app à la racine de ton projet. Chaque fichier mis dans ce dossier deviendra automatiquement une page dans ton app.
