@@ -1,7 +1,7 @@
 
 import { BottomSheetHandle } from "@/components/training/types";
 import React, { useCallback, useRef, useState } from 'react';
-import { Button, Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Toast, ToastHandle } from "../Toast";
 import { TrainingBottomSheet } from './TrainingBottomSheet';
@@ -31,8 +31,8 @@ export function TrainingSpecButton({ formationName }: TrainingSpecButtonProps) {
     return (
         <GestureHandlerRootView style={styles.root}>
                 <View style={styles.container}>
-                    <Button
-                        title="Show Content"
+                    <Pressable
+                        style={({ pressed }) => [styles.ctaButton, pressed && styles.ctaButtonPressed]}
                         onPress={() =>
                             openBottomSheet(
                                 <TrainingForm
@@ -46,7 +46,9 @@ export function TrainingSpecButton({ formationName }: TrainingSpecButtonProps) {
                                 />
                             )
                         }
-                    />
+                    >
+                        <Text style={styles.ctaButtonText}>Demander un devis</Text>
+                    </Pressable>
                     <Toast ref={toastRef} />
                     <TrainingBottomSheet
                         ref={bottomSheetRef}
@@ -82,8 +84,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
     },
-    button: {
-        flex: 1,
-        padding: 10,
-    }
+    ctaButton: {
+        backgroundColor: '#dc2626',
+        borderRadius: 14,
+        height: 52,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        shadowColor: '#dc2626',
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 4,
+    },
+    ctaButtonPressed: { opacity: 0.85 },
+    ctaButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
 })
