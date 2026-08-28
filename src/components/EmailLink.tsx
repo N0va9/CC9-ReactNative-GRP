@@ -1,4 +1,4 @@
-import { View, Pressable, Linking } from 'react-native';
+import { Linking } from 'react-native';
 import { ThemedText } from './ThemedText';
 
 type Props = {

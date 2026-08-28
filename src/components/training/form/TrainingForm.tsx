@@ -57,7 +57,7 @@ export function TrainingForm({ onSubmit, onCancel }: Props) {
 
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+            <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" >
 
                 <View style={styles.header}>
                     {onCancel && (

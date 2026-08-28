@@ -38,6 +38,12 @@ eas init --id {PUT_YOUR_ID}
 npm run reset-project
 ```
 
+## Tests
+```bash=
+npx expo install jest-expo jest 
+npm install --save-dev @testing-library/react-native
+```
+
 ## Lancer le projet 
 
 ```bash=
