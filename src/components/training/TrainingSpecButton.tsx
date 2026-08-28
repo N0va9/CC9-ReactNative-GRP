@@ -1,14 +1,22 @@
 
-import React, { useRef, useCallback, useState } from 'react';
 import { BottomSheetHandle } from "@/components/training/types";
-import { Dimensions, View, Button, StyleSheet, Text } from "react-native";
+import React, { useCallback, useRef, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Toast, ToastHandle } from "../Toast";
 import { TrainingBottomSheet } from './TrainingBottomSheet';
-const { height: screenHeight } = Dimensions.get('window');
+import { TrainingForm } from "./form/TrainingForm";
+import { sendEmail } from "./form/sendEmail";
 
-export function TrainingSpecButton() {
+const { height: screenHeight } = Dimensions.get('window');
+interface TrainingSpecButtonProps {
+    formationName: string;
+}
+
+export function TrainingSpecButton({ formationName }: TrainingSpecButtonProps) {
     const bottomSheetRef = useRef<BottomSheetHandle>(null)
     const [content, setContent] = useState<React.ReactNode>(null);
+    const toastRef = useRef<ToastHandle>(null);
 
     const openBottomSheet = useCallback(
         (newContent: React.ReactNode) => {
@@ -22,24 +30,35 @@ export function TrainingSpecButton() {
 
     return (
         <GestureHandlerRootView style={styles.root}>
-                <View>
-                    <Button
-                        title="Show Content"
+                <View style={styles.container}>
+                    <Pressable
+                        style={({ pressed }) => [styles.ctaButton, pressed && styles.ctaButtonPressed]}
                         onPress={() =>
                             openBottomSheet(
-                                <View style={styles.content}>
-                                    <Text style={styles.text}>Premier contenu</Text>
-                                </View>
+                                <TrainingForm
+                                    key={Date.now()}
+                                    onSubmit={async (data) => {
+                                        await sendEmail(data, formationName);
+                                        bottomSheetRef.current?.closeSheet();
+                                        toastRef.current?.show('Demande de devis bien envoyée');
+                                    }}
+                                    onCancel={() => bottomSheetRef.current?.closeSheet()}
+                                />
                             )
                         }
-                    />
+                    >
+                        <Text style={styles.ctaButtonText}>Demander un devis</Text>
+                    </Pressable>
+                    <Toast ref={toastRef} />
                     <TrainingBottomSheet
                         ref={bottomSheetRef}
                         activeHeight={screenHeight}
                         backDropColor="rgba(0,0,0,0.5)"
-                        backgroundColor='red'>
+                        blurIntensity={100}
+                        blurTint="light">
                         {content}
                     </TrainingBottomSheet>
+
                 </View>
         </GestureHandlerRootView>
     )
@@ -65,8 +84,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
     },
-    button: {
-        flex: 1,
-        padding: 10,
-    }
+    ctaButton: {
+        backgroundColor: '#dc2626',
+        borderRadius: 14,
+        height: 52,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        shadowColor: '#dc2626',
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 4,
+    },
+    ctaButtonPressed: { opacity: 0.85 },
+    ctaButtonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
 })

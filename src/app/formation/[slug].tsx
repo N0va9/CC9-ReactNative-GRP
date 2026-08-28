@@ -1,17 +1,17 @@
-import { useLocalSearchParams, router } from "expo-router";
-import { StyleSheet, Image, Pressable, View, ScrollView, ActivityIndicator, Button } from "react-native";
+import { Card } from "@/components/Card";
+import { EmailLink } from "@/components/EmailLink";
 import { RootView } from "@/components/RootView";
 import { Row } from "@/components/Row";
 import { ThemedText } from "@/components/ThemedText";
+import { TrainingSpec } from "@/components/training/TrainingSpec";
+import { TrainingSpecButton } from "@/components/training/TrainingSpecButton";
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { catalogService } from '@/services/catalogService';
 import { CatalogItemDetailed } from '@/types/CatalogItemDetailed';
-import { useThemeColors } from '@/hooks/useThemeColors';
-import { printDuration, printAudience, customSlice, printObjectives } from "@/utils/format";
+import { customSlice, printAudience, printDuration, printObjectives } from "@/utils/format";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from 'react';
-import { Card } from "@/components/Card";
-import { TrainingSpec } from "@/components/training/TrainingSpec";
-import { EmailLink } from "@/components/EmailLink";
-import { TrainingSpecButton } from "@/components/training/TrainingSpecButton";
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 
 export default function FormationDetails() {
@@ -70,7 +70,7 @@ export default function FormationDetails() {
                 </Row>
                 <Row >
                     <View style={{zIndex: 999, flex: 1}}>
-                    <TrainingSpecButton />
+                    <TrainingSpecButton formationName={details?.title ?? ''} />
 
                     </View>
                 </Row>

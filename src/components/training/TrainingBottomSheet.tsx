@@ -1,9 +1,11 @@
-import { View, StyleSheet, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import React, { forwardRef, useCallback, useImperativeHandle } from 'react';
+/* eslint-disable react/display-name */
 import { BottomSheetHandle, BottomSheetProps } from '@/components/training/types';
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BlurView } from 'expo-blur';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
+import { Dimensions, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
     (
@@ -11,7 +13,9 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
             activeHeight, 
             children,
             backDropColor= 'rgba(0,0,0,0.5)',
-            backgroundColor = 'white',
+            backgroundColor = 'rgba(255, 242, 223, 0.7)',
+            blurIntensity = 50,
+            blurTint = 'light',
         },
         ref,
     ) => {
@@ -20,9 +24,30 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
         const closedPositionY = screenHeight;
         const openPositionY = screenHeight - activeHeight;
 
+        
 
         const sheetPositionY = useSharedValue(closedPositionY);
         const gestureStartPositionY = useSharedValue(0);
+        const keyboardOffset = useSharedValue(0)
+
+        useEffect(() => {
+            const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+            const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+            const showSub = Keyboard.addListener(showEvent, (e) => {
+                keyboardOffset.value = withTiming(e.endCoordinates.height, { duration: e.duration || 250 });
+            });
+            const hideSub = Keyboard.addListener(hideEvent, (e) => {
+                keyboardOffset.value = withTiming(0, { duration: e.duration || 250 });
+            });
+
+            return () => {
+                showSub.remove();
+                hideSub.remove();
+            };
+            
+        }, [keyboardOffset]);
+
 
         const openSheet = useCallback(() => {
             sheetPositionY.value = withSpring(openPositionY, {
@@ -51,7 +76,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
 
 
         const sheetStyle = useAnimatedStyle(() => ({
-            top: sheetPositionY.value
+            top: sheetPositionY.value - keyboardOffset.value
         }));
 
         const backdropsType = useAnimatedStyle(() => {
@@ -107,24 +132,22 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
                         ]}
                     />
                 </TouchableWithoutFeedback>
-                <GestureDetector gesture={panGestureHandler}>
-                    <Animated.View
-                        style={[
-                            styles.container,
-                            sheetStyle,
-                            {
-                                height: activeHeight, 
-                                backgroundColor,
-                                paddingBottom: safeAreaInsets.bottom,
+                <Animated.View
+                    style={[
+                    styles.container,
+                    sheetStyle,
+                    { height: activeHeight, backgroundColor, paddingBottom: safeAreaInsets.bottom },
+                    ]}>
+                    <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
 
-                            },
-                        ]}>
+                    <GestureDetector gesture={panGestureHandler}>
                         <View style={styles.lineContainer}>
                             <View style={styles.line} />
                         </View>
-                        {children}
-                    </Animated.View>
-                </GestureDetector>
+                    </GestureDetector>
+
+                    {children}
+                </Animated.View>
             </>
         )
     }
@@ -136,11 +159,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        bottom: 0,
-        width:'100%'
+        //bottom: 0,
+        width:'100%',
+        overflow: 'hidden'
     },
     lineContainer: {
-        marginVertical: 10,
+        paddingVertical: 16,
         alignItems: 'center',
     },
     line: {
