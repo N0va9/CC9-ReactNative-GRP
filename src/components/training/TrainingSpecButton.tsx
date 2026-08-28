@@ -3,6 +3,7 @@ import { BottomSheetHandle } from "@/components/training/types";
 import React, { useCallback, useRef, useState } from 'react';
 import { Button, Dimensions, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Toast, ToastHandle } from "../Toast";
 import { TrainingBottomSheet } from './TrainingBottomSheet';
 import { TrainingForm } from "./form/TrainingForm";
 import { sendEmail } from "./form/sendEmail";
@@ -15,6 +16,7 @@ interface TrainingSpecButtonProps {
 export function TrainingSpecButton({ formationName }: TrainingSpecButtonProps) {
     const bottomSheetRef = useRef<BottomSheetHandle>(null)
     const [content, setContent] = useState<React.ReactNode>(null);
+    const toastRef = useRef<ToastHandle>(null);
 
     const openBottomSheet = useCallback(
         (newContent: React.ReactNode) => {
@@ -38,13 +40,14 @@ export function TrainingSpecButton({ formationName }: TrainingSpecButtonProps) {
                                     onSubmit={async (data) => {
                                         await sendEmail(data, formationName);
                                         bottomSheetRef.current?.closeSheet();
+                                        toastRef.current?.show('Demande de devis bien envoyée');
                                     }}
                                     onCancel={() => bottomSheetRef.current?.closeSheet()}
                                 />
                             )
                         }
                     />
-
+                    <Toast ref={toastRef} />
                     <TrainingBottomSheet
                         ref={bottomSheetRef}
                         activeHeight={screenHeight}
