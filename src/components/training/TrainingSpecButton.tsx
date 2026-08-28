@@ -26,7 +26,7 @@ export function TrainingSpecButton() {
         <GestureHandlerRootView style={styles.root}>
                 <View style={styles.container}>
                     <Button
-                        title="Show Content"
+                        title="Demande de devis"
                         onPress={() =>
                             openBottomSheet(
                                 <TrainingForm

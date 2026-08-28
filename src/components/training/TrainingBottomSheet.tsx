@@ -9,9 +9,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProps>(
     (
         {
-            activeHeight, 
+            activeHeight,
             children,
-            backDropColor= 'rgba(0,0,0,0.5)',
+            backDropColor = 'rgba(0,0,0,0.5)',
             backgroundColor = 'rgba(255, 242, 223, 0.7)',
             blurIntensity = 50,
             blurTint = 'light',
@@ -19,11 +19,11 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
         ref,
     ) => {
         const safeAreaInsets = useSafeAreaInsets();
-        const {height: screenHeight} = Dimensions.get('screen');
+        const { height: screenHeight } = Dimensions.get('screen');
         const closedPositionY = screenHeight;
         const openPositionY = screenHeight - activeHeight;
 
-        
+
 
         const sheetPositionY = useSharedValue(closedPositionY);
         const gestureStartPositionY = useSharedValue(0);
@@ -44,7 +44,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
                 showSub.remove();
                 hideSub.remove();
             };
-            
+
         }, [keyboardOffset]);
 
 
@@ -65,7 +65,7 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
         }, [closedPositionY]);
 
         useImperativeHandle(
-            ref, 
+            ref,
             () => ({
                 openSheet,
                 closeSheet,
@@ -88,35 +88,35 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
                 opacity,
                 display: opacity === 0 ? 'none' : 'flex',
             }
-        }); 
+        });
 
         const panGestureHandler = Gesture.Pan()
-        .onBegin(() => {
-            gestureStartPositionY.value = sheetPositionY.value;
-        })
-        .onUpdate(ev => {
-            const newPositionY = gestureStartPositionY.value + ev.translationY;
-            sheetPositionY.value = Math.min(
-                Math.max(newPositionY, openPositionY),
-                closedPositionY,
-            );
-        })
-        .onEnd(() => {
-            if (sheetPositionY.value > openPositionY + 50) {
-                sheetPositionY.value = withSpring(closedPositionY, {
-                    damping: 50,
-                    stiffness: 150,
-                    mass: 0.5,
-                });
-            } else {
-                sheetPositionY.value = withSpring(openPositionY, {
-                    damping: 50,
-                    stiffness: 150,
-                    mass: 0.5,
-                });  
-            }
+            .onBegin(() => {
+                gestureStartPositionY.value = sheetPositionY.value;
+            })
+            .onUpdate(ev => {
+                const newPositionY = gestureStartPositionY.value + ev.translationY;
+                sheetPositionY.value = Math.min(
+                    Math.max(newPositionY, openPositionY),
+                    closedPositionY,
+                );
+            })
+            .onEnd(() => {
+                if (sheetPositionY.value > openPositionY + 50) {
+                    sheetPositionY.value = withSpring(closedPositionY, {
+                        damping: 50,
+                        stiffness: 150,
+                        mass: 0.5,
+                    });
+                } else {
+                    sheetPositionY.value = withSpring(openPositionY, {
+                        damping: 50,
+                        stiffness: 150,
+                        mass: 0.5,
+                    });
+                }
 
-        });
+            });
 
         return (
             <>
@@ -131,25 +131,29 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
                         ]}
                     />
                 </TouchableWithoutFeedback>
-                <GestureDetector gesture={panGestureHandler}>
-                    <Animated.View
-                        style={[
-                            styles.container,
-                            sheetStyle,
-                            {
-                                height: activeHeight, 
-                                backgroundColor,
-                                paddingBottom: safeAreaInsets.bottom,
+                <Animated.View
+                    style={[
+                        styles.container,
+                        sheetStyle,
+                        {
+                            height: activeHeight,
+                            backgroundColor,
+                            paddingBottom: safeAreaInsets.bottom,
 
-                            },
-                        ]}>
-                        <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
+                        },
+                    ]}>
+                    <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
+                    <GestureDetector gesture={panGestureHandler}>
                         <View style={styles.lineContainer}>
                             <View style={styles.line} />
                         </View>
-                        {children}
-                    </Animated.View>
-                </GestureDetector>
+                    </GestureDetector>
+
+                    {children}
+                </Animated.View>
+
+
+
             </>
         )
     }
@@ -162,17 +166,17 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         //bottom: 0,
-        width:'100%',
+        width: '100%',
         overflow: 'hidden'
     },
     lineContainer: {
-        marginVertical: 10,
+        paddingVertical: 16,
         alignItems: 'center',
     },
     line: {
         width: 50,
         height: 4,
-        borderRadius:20,
+        borderRadius: 20,
         backgroundColor: 'black',
     },
     backdrop: {
