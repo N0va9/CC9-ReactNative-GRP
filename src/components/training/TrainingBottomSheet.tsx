@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { BottomSheetHandle, BottomSheetProps } from '@/components/training/types';
 import { BlurView } from 'expo-blur';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
@@ -131,25 +132,22 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
                         ]}
                     />
                 </TouchableWithoutFeedback>
-                <GestureDetector gesture={panGestureHandler}>
-                    <Animated.View
-                        style={[
-                            styles.container,
-                            sheetStyle,
-                            {
-                                height: activeHeight, 
-                                backgroundColor,
-                                paddingBottom: safeAreaInsets.bottom,
+                <Animated.View
+                    style={[
+                    styles.container,
+                    sheetStyle,
+                    { height: activeHeight, backgroundColor, paddingBottom: safeAreaInsets.bottom },
+                    ]}>
+                    <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
 
-                            },
-                        ]}>
-                        <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
+                    <GestureDetector gesture={panGestureHandler}>
                         <View style={styles.lineContainer}>
                             <View style={styles.line} />
                         </View>
-                        {children}
-                    </Animated.View>
-                </GestureDetector>
+                    </GestureDetector>
+
+                    {children}
+                </Animated.View>
             </>
         )
     }
@@ -166,7 +164,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     lineContainer: {
-        marginVertical: 10,
+        paddingVertical: 16,
         alignItems: 'center',
     },
     line: {

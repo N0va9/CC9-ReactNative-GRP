@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Civilite, initialFormData, InscriptionFormData } from '../types';
 import { DatePickerRow } from './DatePickerRow';
 import { FormField } from './FormField';
@@ -30,10 +30,28 @@ function isFormValid(data: InscriptionFormData) {
 
 export function TrainingForm({ onSubmit, onCancel }: Props) {
     const [formData, setFormData] = useState<InscriptionFormData>(initialFormData);
+    const [isSending, setIsSending] = useState(false);
 
     const updateForm = useCallback((patch: Partial<InscriptionFormData>) => {
         setFormData((prev) => ({ ...prev, ...patch }));
     }, []);
+
+    const handleSubmit = async () => {
+        if (!isFormValid(formData)) return;
+
+        setIsSending(true);
+        try {
+            await onSubmit(formData);
+        } catch (error) {
+            Alert.alert(
+                "Échec de l'envoi",
+                "Une erreur est survenue, merci de réessayer."
+            );
+            console.error(error);
+        } finally {
+            setIsSending(false);
+        }
+    };
 
     const canSubmit = useMemo(() => isFormValid(formData), [formData]);
 
@@ -131,7 +149,7 @@ export function TrainingForm({ onSubmit, onCancel }: Props) {
                     et effectuer le suivi de notre relation commerciale.
                 </Text>
                 <Text style={styles.legal}>
-                    Conformément à la loi du 10 janvier 1978 relative à l’Informatique, aux Fichiers et aux Libertés, 
+                    Conformément à la loi du 10 janvier 1978 relative à l'Informatique, aux Fichiers et aux Libertés, 
                     vous pouvez exercer à tout moment, sous réserve de justification de votre identité, 
                     vos droits (information, accès, opposition, rectification) aux données personnelles vous concernant via notre formulaire de contact.
                 </Text>
@@ -140,10 +158,15 @@ export function TrainingForm({ onSubmit, onCancel }: Props) {
                 </Text>
 
                 <Pressable
-                    style={[styles.submitButton, !canSubmit && styles.submitButtonDisabled]}
-                    onPress={() => canSubmit && onSubmit(formData)}
-                    disabled={!canSubmit}>
-                    <Text style={styles.submitText}>Envoyer</Text>
+                    style={[styles.submitButton, isSending && { opacity: 0.6 }]}
+                    onPress={handleSubmit}
+                    disabled={isSending}
+                >
+                    {isSending ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.submitText}>Envoyer</Text>
+                    )}
                 </Pressable>
 
             </ScrollView>

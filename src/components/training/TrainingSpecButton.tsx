@@ -1,14 +1,18 @@
 
 import { BottomSheetHandle } from "@/components/training/types";
 import React, { useCallback, useRef, useState } from 'react';
-import { Button, Dimensions, LayoutChangeEvent, StyleSheet, View } from "react-native";
+import { Button, Dimensions, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TrainingBottomSheet } from './TrainingBottomSheet';
 import { TrainingForm } from "./form/TrainingForm";
+import { sendEmail } from "./form/sendEmail";
 
 const { height: screenHeight } = Dimensions.get('window');
+interface TrainingSpecButtonProps {
+    formationName: string;
+}
 
-export function TrainingSpecButton() {
+export function TrainingSpecButton({ formationName }: TrainingSpecButtonProps) {
     const bottomSheetRef = useRef<BottomSheetHandle>(null)
     const [content, setContent] = useState<React.ReactNode>(null);
 
@@ -31,8 +35,8 @@ export function TrainingSpecButton() {
                             openBottomSheet(
                                 <TrainingForm
                                     key={Date.now()}
-                                    onSubmit={(data) => {
-                                        console.log('Formulaire envoyé', data);
+                                    onSubmit={async (data) => {
+                                        await sendEmail(data, formationName);
                                         bottomSheetRef.current?.closeSheet();
                                     }}
                                     onCancel={() => bottomSheetRef.current?.closeSheet()}
