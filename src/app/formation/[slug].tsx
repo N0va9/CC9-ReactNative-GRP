@@ -82,6 +82,8 @@ export default function FormationDetails() {
                         <View style={{ paddingBottom: 10 }}>
                             <TrainingSpec title="Public" description={printAudience(details?.audience)} image={require("@/../assets/images/users.png")} />
                             <TrainingSpec title="Durée" description={printDuration(details?.duration)} image={require("@/../assets/images/clock.png")} />
+                            <TrainingSpec title="Prix présentiel" description={ String(details?.standardPrice)  ?? "Non défini"} image={require("@/../assets/images/price.png")} />
+                            <TrainingSpec title="Prix distanciel" description={ String(details?.remotelyPrice) ?? "Non défini"} image={require("@/../assets/images/price.png")} />
                         </View>
                         <View style={{ borderStyle: 'solid', borderBottomWidth: 1, borderColor: colors.redCustom, paddingHorizontal: '20%' }}></View>
                         <View style={{ paddingTop: 20 }}>

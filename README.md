@@ -10,12 +10,20 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Create the .env file
+2. Create an account on EmailJS API : https://www.emailjs.com/ and get credentials
+
+3. Create the .env file
 ```bash=
 EXPO_PUBLIC_API_URL={PUT_THE_DAWAN_API_URL}
+
+EXPO_PUBLIC_EMAILJS_SERVICE_ID={EMAILJS_SERVICE_ID}
+EXPO_PUBLIC_EMAILJS_TEMPLATE_ID={EMAILJS_TEMPLATE_ID}
+EXPO_PUBLIC_EMAILJS_PUBLIC_KEY={EMAILJS_PUBLIC_KEY}
+
+EXPO_PUBLIC_EMAIL_DEVIS={EMAIL_RECEPTION_DEVIS}
 ```
 
-3. Start the app
+4. Start the app
 
    ```bash
    npx expo start
