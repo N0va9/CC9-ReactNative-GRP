@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { BottomSheetHandle, BottomSheetProps } from '@/components/training/types';
 import { BlurView } from 'expo-blur';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react';
@@ -133,16 +134,12 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
                 </TouchableWithoutFeedback>
                 <Animated.View
                     style={[
-                        styles.container,
-                        sheetStyle,
-                        {
-                            height: activeHeight,
-                            backgroundColor,
-                            paddingBottom: safeAreaInsets.bottom,
-
-                        },
+                    styles.container,
+                    sheetStyle,
+                    { height: activeHeight, backgroundColor, paddingBottom: safeAreaInsets.bottom },
                     ]}>
                     <BlurView intensity={blurIntensity} tint={blurTint} style={StyleSheet.absoluteFill} />
+
                     <GestureDetector gesture={panGestureHandler}>
                         <View style={styles.lineContainer}>
                             <View style={styles.line} />
@@ -151,9 +148,6 @@ export const TrainingBottomSheet = forwardRef<BottomSheetHandle, BottomSheetProp
 
                     {children}
                 </Animated.View>
-
-
-
             </>
         )
     }
